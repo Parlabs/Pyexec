@@ -38,6 +38,6 @@ world of programming!
 
 # Getting involved
 To run Pyexec on your local machine, you will need to create the "static" folder and add these files:
-- Codemirror
-- The favicon (in the templates folder)
-- Image of the editor (in the main branch)
+- Codemirror (https://codemirror.net/)
+- The favicon
+- Image of the editor
