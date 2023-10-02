@@ -34,10 +34,3 @@ enhance your career prospects, or simply explore a new hobby, our
 platform is your gateway to success. So, what are you waiting for?
 Join us today and embark on an exciting learning adventure in the
 world of programming!
-
-
-# Getting involved
-To run Pyexec on your local machine, you will need to create the "static" folder and add these files:
-- Codemirror (https://codemirror.net/)
-- The favicon
-- Image of the editor
