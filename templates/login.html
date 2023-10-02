@@ -1,4 +1,62 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" />
+    </head>
+    <body>
+
+        <div class="container">
+            <div class="card">
+              <div class="card_title">
+                <h1>Login</h1>
+                <span>Don't have an account? <a href="/join">Join</a></span>
+              </div><br><br><br>
+              <div class="form">
+                <form method="get" id="form">
+                    <input type="email" name="email" id="email" placeholder="Email" required/>
+                    <input type="password" name="password" placeholder="Password" id="password" required/>
+                    <button>Login</button>
+                </form>
+              </div>
+            </div>
+        </div>
+
+        <script type="module">
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.2.0/firebase-app.js";
+            import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.2.0/firebase-analytics.js";
+            import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.2.0/firebase-auth.js";
+
+            const firebaseConfig = {
+              apiKey: "AIzaSyAb--Az6qZv6vqVX2w1LYgmZ146CdG4-Jg",
+              authDomain: "pyexec-d92d3.firebaseapp.com",
+              projectId: "pyexec-d92d3",
+              storageBucket: "pyexec-d92d3.appspot.com",
+              messagingSenderId: "144284379633",
+              appId: "1:144284379633:web:3294d55eacbed120603c50",
+              measurementId: "G-GLFEGW9KN3"
+            };
+          
+            const app = initializeApp(firebaseConfig);
+            const analytics = getAnalytics(app);
+            const auth = getAuth();
+
+            document.getElementById("form").addEventListener("submit", function(e) {
+                e.preventDefault()
+                signInWithEmailAndPassword(auth, document.getElementById("email").value, document.getElementById("password").value).then((cred) => { 
+                        onAuthStateChanged(auth, (user) => {
+                          const uid = user.uid;
+                          localStorage.setItem("uid", uid);
+                        });
+                        localStorage.setItem("login", "in")
+                        window.location.href = "/explore";
+                });        
+            });
+            
+          </script>
+    </body>
+</html>
 {% endblock %}

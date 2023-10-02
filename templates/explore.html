@@ -1,4 +1,227 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+        <style>
+            .background {
+                height: 100vh;
+                width: 100%;
+                display: flex;
+                background: #CBF3F0;
+            }
+
+            .search {
+                width: 200%;
+                display: flex;
+            }
+
+            .searchTerm {
+                width: 100%;
+                border: 3px solid #FFBF69;
+                border-right: none;
+                padding: 5px;
+                height: 20px;
+                border-radius: 5px 0 0 5px;
+                outline: none;
+                height: 36px;
+                box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.3);
+            }
+
+            .searchButton {
+                width: 40px;
+                height: 36px;
+                border: 1px solid #FFBF69;
+                background: #FFBF69;
+                text-align: center;
+                color: #fff;
+                border-radius: 0 5px 5px 0;
+                cursor: pointer;
+                font-size: 20px;
+                margin-right: 5px;
+            }
+
+            .create {
+                width: 75px;
+                height: 36px;
+                border: 1px solid #FFBF69;
+                background: #FFBF69;
+                text-align: center;
+                color: #fff;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 15px;
+                margin-left: 32.5%;
+                margin-top: 2%;
+                box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.3);
+            }
+
+            .wrap{
+                width: 30%;
+                margin-top: 2%;
+                margin-left: 2%;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="background">
+            <div class="wrap">
+                <div class="search">
+                <input type="text" class="searchTerm" id="searchTerm" placeholder="Search for any project">
+                <button type="submit" class="searchButton" id="searchButton">
+                    <i class="fa fa-search"></i>
+                </button>
+                </div>
+            </div>
+            <button class="create" id="create">Create</button><br>
+            <div class="opened-projects">
+                <p style="color: #818589">Previously opened projects</p>
+                <ul id="projects"></ul>
+            </div>
+        </div>
+
+         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+         <script type="module">
+            //FIXME: - Add a save button/function....done
+            // - Show user's projects....done
+            // - Add response to a query +
+            // - Fix bugs (Code snippet mechanism)....done
+            // - Create static presentation page....done
+
+             import { initializeApp } from "https://www.gstatic.com/firebasejs/10.2.0/firebase-app.js";
+             import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.2.0/firebase-analytics.js";
+             import { getFirestore, addDoc, collection, where, getDocs, getDoc, doc, query } from "https://www.gstatic.com/firebasejs/10.2.0/firebase-firestore.js";
+     
+     
+             const firebaseConfig = {
+               apiKey: "AIzaSyAb--Az6qZv6vqVX2w1LYgmZ146CdG4-Jg",
+               authDomain: "pyexec-d92d3.firebaseapp.com",
+               projectId: "pyexec-d92d3",
+               storageBucket: "pyexec-d92d3.appspot.com",
+               messagingSenderId: "144284379633",
+               appId: "1:144284379633:web:3294d55eacbed120603c50",
+               measurementId: "G-GLFEGW9KN3"
+             };
+           
+             const app = initializeApp(firebaseConfig);
+             const analytics = getAnalytics(app);
+             const db = getFirestore();
+     
+             window.onload=function(){
+                 if (localStorage.getItem("login") === "in") {
+
+                    const projectData = JSON.parse(localStorage.getItem("projectsIdArray"));
+
+                    function addLi(projectNameId) {
+                        async function getData() {
+                            const docReference = doc(db, "Projects", projectNameId);
+                            const docSnap = await getDoc(docReference);
+                            const data = docSnap.data();
+
+                            const projectName = data.name;
+
+                            const li = document.createElement("li");
+                            const div = document.createElement("div");
+                            const h4 = document.createElement("h4");
+                            const space = document.createElement("br");
+                            const button = document.createElement("button");
+
+                            h4.innerHTML = projectName;
+                            button.innerHTML = "Open";
+
+                            li.style.listStyleType = "none";
+                            div.style.background = "#fff";
+                            div.style.borderRadius = "15px";
+                            div.style.width = "200px";
+                            div.style.height = "100px";
+                            div.style.marginTop = "20px";
+                            div.style.boxShadow = "rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px";
+                            h4.style.marginLeft = "5px";
+                            button.style.width = "75px";
+                            button.style.height = "30px";
+                            button.style.background = "#FFBF69";
+                            button.style.border = "none";
+                            button.style.borderRadius = "100px";
+                            button.style.color = "#fff";
+                            button.style.marginLeft = "5px";
+                            button.style.marginTop = "15px"; 
+                            button.style.boxShadow = "rgba(0, 0, 0, 0.15) 0px 3px 3px 0px";
+                            button.style.cursor = "pointer";
+
+
+                            document.getElementById("projects").appendChild(li);
+                            li.appendChild(div);
+                            div.appendChild(space);
+                            div.appendChild(h4);
+                            div.appendChild(button);
+
+                            button.addEventListener("click", function(e) {
+                                e.preventDefault;
+                                
+                                localStorage.setItem("pid", projectNameId);
+                                localStorage.setItem("name", projectName);
+                                localStorage.setItem("project", "old");
+
+                                window.location.href = "/create";
+                            });
+                        }
+
+                        getData();
+                    }
+
+                    projectData.forEach(projects =>{
+                        addLi(projects);
+                    });
+                    
+                    document.getElementById("searchButton").addEventListener("click", function(e){
+                        e.preventDefault();
+                        const searchVal = document.getElementById("searchTerm").value;
+
+                        projectData.forEach(projects =>{
+                            async function getData2() {
+                                const docReference2 = doc(db, "Projects", projects);
+                                const docSnap2 = await getDoc(docReference2);
+                                const data2 = docSnap2.data();
+
+                                if (data2.name === searchVal) {                                                                    
+                                    localStorage.setItem("pid", projects);
+                                    localStorage.setItem("name", data2.name);
+                                    localStorage.setItem("project", "old");
+
+                                    window.location.href = "/create";
+                                }
+                            }
+
+                            getData2();
+                        });
+                    });
+                 } else {
+                     Swal.fire(
+                         'Sorry...',
+                         'You are not logged in. You will be redirected to the login page.',
+                         'error'
+                     )
+                     setTimeout(() => { window.location.href = "/login"; }, 5000);
+                 }
+             }
+
+             document.getElementById("create").addEventListener("click", function() {
+                if (localStorage.getItem("login") === "in") {
+                     localStorage.setItem("project", "new")
+                     window.location.href = "/create";
+                 } else {
+                     Swal.fire(
+                         'Sorry...',
+                         'You are not logged in. You will be redirected to the login page.',
+                         'error'
+                     )
+                     setTimeout(() => { window.location.href = "/login"; }, 5000);
+                 }
+             });
+         </script>
+    </body>
+</html>
 {% endblock %}

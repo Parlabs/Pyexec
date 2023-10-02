@@ -1,4 +1,74 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css" />
+    </head>
+    <body>
+
+        <div class="container">
+            <div class="card">
+              <div class="card_title">
+                <h1>Join Now</h1>
+                <span>Already have an account? <a href="/login">Login</a></span>
+              </div>
+              <div class="form">
+                <form method="get" id="form">
+                    <input type="email" name="email" id="email" placeholder="Email" required/>
+                    <input type="password" name="password" placeholder="Password" id="password" required/>
+                    <input type="password" name="confirm" placeholder="Confirm Password" id="confirm" required/>
+                    <button>Join</button>
+                </form>
+              </div>
+              <div class="card_terms">
+                <p>*Password must 6 characters or longer</p>
+              </div>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script type="module">
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.2.0/firebase-app.js";
+            import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.2.0/firebase-analytics.js";
+            import { getAuth, createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.2.0/firebase-auth.js";
+
+            const firebaseConfig = {
+              apiKey: "AIzaSyAb--Az6qZv6vqVX2w1LYgmZ146CdG4-Jg",
+              authDomain: "pyexec-d92d3.firebaseapp.com",
+              projectId: "pyexec-d92d3",
+              storageBucket: "pyexec-d92d3.appspot.com",
+              messagingSenderId: "144284379633",
+              appId: "1:144284379633:web:3294d55eacbed120603c50",
+              measurementId: "G-GLFEGW9KN3"
+            };
+          
+            const app = initializeApp(firebaseConfig);
+            const analytics = getAnalytics(app);
+            const auth = getAuth();
+
+            document.getElementById("form").addEventListener("submit", function(e) {
+                e.preventDefault()
+                if (document.getElementById("password").value === document.getElementById("confirm").value) {
+                    createUserWithEmailAndPassword(auth, document.getElementById("email").value, document.getElementById("password").value).then((cred) => { 
+                        onAuthStateChanged(auth, (user) => {
+                          const uid = user.uid;
+                          localStorage.setItem("uid", uid);
+                        });
+                        window.location.href = "/login";
+                    });
+                }else {
+                    Swal.fire(
+                    'Sorry...',
+                    'Both passwords does not match.',
+                    'error'
+                    )
+                }
+            });
+            
+          </script>
+    </body>
+</html>
 {% endblock %}

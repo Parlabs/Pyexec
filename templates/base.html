@@ -5,6 +5,7 @@
       <link rel="preconnect" href="https://fonts.googleapis.com">
       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
       <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet">
+      <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
       <style>
           * {
                 box-sizing: border-box;
@@ -126,7 +127,7 @@
                 }
 
                 .navbar__menu.active {
-                  background: #131313;
+                  background: linear-gradient(to right, #2EC4B6, #ACF3EE);
                   top: 100%;
                   opacity: 1;
                   transition: all 0.5s ease;
@@ -241,6 +242,7 @@
 
               .main__btn {
                 font-size: 1.8rem;
+                color: #fff;
                 background: #FFBF69;
                 padding: 10px 25px;
                 border: none;
@@ -267,6 +269,7 @@
                 width: 0;
                 height: 100%;
                 background: #191919;
+                color: #fff;
                 transition: all 0.35s;
                 border-radius: 17px;
               }
@@ -277,7 +280,212 @@
 
               .main__btn:hover:after {
                 width: 100%;
+                color: #fff;
               }
+
+              .side-bar {
+                background: #CBF3F0;
+                height: 100%;
+                width: 20%;
+                position: absolute;
+                overflow-y: scroll;
+              }
+
+              .editor {
+                margin-left: 20%;
+                padding: 0px 0px;
+                height: 100%;
+                position: fixed;
+              }
+
+              #run {
+                margin-left: 60%;
+                padding: 0px 0px;
+                position: fixed;
+                background: #e8e8e6;
+                height: 100%;
+                width: 40%;
+              }
+
+              #run__btn {
+                color: #fff;
+                background:#FFBF69;
+                border: none;
+                width: 100px;
+                height: 45px;
+                border-radius: 7.5px;
+                margin-top: 2.5%;
+                margin-left: 2%;
+              }
+
+              .events-btn {
+                margin-left: 25px;
+                margin-top: 30px;
+                color: #fff;
+                background: #F3CC3F;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                height: 25px;
+              }
+
+              .loops-btn {
+                margin-left: 25px;
+                margin-top: 30px;
+                color: #fff;
+                background: #3F67F3;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                height: 25px;
+              }
+
+              .operators-btn {
+                margin-left: 25px;
+                margin-top: 30px;
+                color: #fff;
+                background: #45cc6e;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                height: 25px;
+              }
+
+              #console {
+                background: #fff;
+                width: 95%;
+                height: 65%;
+                margin-left: 2%;
+                border-radius: 10px;
+              }
+
+              .variables-btn {
+                margin-left: 25px;
+                margin-top: 30px;
+                color: #fff;
+                background: #FA8072;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                height: 25px;
+              }
+
+              .functions-btn {
+                margin-left: 25px;
+                margin-top: 30px;
+                color: #fff;
+                background: #a834eb;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                height: 25px;
+              }
+
+              .join {
+                background: #fff;
+                width: 25%;
+                height: 73%;
+                margin-left: 37.5%;
+                margin-top: 3%;
+                border-radius: 10px;
+                box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+                text-align: center;
+              }
+
+              .container {
+                height: 100vh;
+                width: 100%;
+                align-items: center;
+                display: flex;
+                justify-content: center;
+                background: #CBF3F0;
+              }
+
+              .card {
+                border-radius: 10px;
+                box-shadow: 0 5px 10px 0 rgba(0, 0, 0, 0.3);
+                width: 400px;
+                height: 400px;
+                background-color: #ffffff;
+                padding: 10px 30px;
+              }
+
+              .card_title {
+                text-align: center;
+                padding: 10px;
+              }
+
+              .card_title h1 {
+                font-size: 26px;
+                font-weight: bold;
+              }
+
+              .form input {
+                margin: 10px 0;
+                width: 100%;
+                background-color: #e2e2e2;
+                border: none;
+                outline: none;
+                padding: 12px 20px;
+                border-radius: 4px;
+              }
+
+              .form button {
+                background-color: #FFBF69;
+                color: #ffffff;
+                font-size: 16px;
+                outline: none;
+                border-radius: 5px;
+                border: none;
+                padding: 8px 15px;
+                width: 100%;
+                cursor: pointer;
+              }
+
+              .card_terms {
+                display: flex;
+                align-items: center;
+                padding: 10px;
+              }
+
+              .card_terms input[type="checkbox"] {
+                background-color: #e2e2e2;
+              }
+
+              .card_terms span {
+                margin: 5px;
+                font-size: 13px;
+              }
+
+              .card a {
+                color: #4796ff;
+                text-decoration: none;
+              }
+
+              #project_name {
+                background-color: #fff;
+                border: none;
+                outline: none;
+                padding: 12px 20px;
+                height: 45px;
+                border-radius: 7.5px;
+                margin-left: 2%;
+              }
+
+              #save_btn {
+                background: #2EC4B6;
+                color: #fff;
+                width: 55px;
+                height: 30px;
+                margin-left: 10px;
+                border-radius: 5px;
+              }
+
+              .opened-projects {
+                margin-top: 90px;
+                margin-left: -862.5px;
+              }
+
       </style>
   </head>
   <body>
@@ -290,7 +498,7 @@
           </div>
           <ul class="navbar__menu">
             <li class="navbar__item">
-              <a class="navbar__links" id="create-page" href="/create">Create</a>
+              <a class="navbar__links" id="create-page" href="/explore">Create</a>
             </li>
             <li class="navbar__item">
               <a class="navbar__links" id="explore-page" href="/explore">Explore</a>
