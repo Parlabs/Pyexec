@@ -10,60 +10,56 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='codemirror/theme/idea.css') }}">
         <script src="{{ url_for('static', filename='codemirror/mode/python/python.js') }}"></script>
         <script src="{{ url_for('static', filename='codemirror/addon/edit/closebrackets.js') }}"></script>
-        <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css">
-        <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
+        <link rel="stylesheet" href="https://pyscript.net/releases/2024.11.1/core.css">
+        <script type="module" src="https://pyscript.net/releases/2024.11.1/core.js"></script>
+        <script src="https://unpkg.com/blockly/blockly_compressed.js"></script>
+        <script src="https://unpkg.com/blockly/blocks_compressed.js"></script>
+        <script src="https://unpkg.com/blockly/javascript_compressed.js"></script>
+        <script src="https://unpkg.com/blockly/python_compressed.js"></script>
+        <script src="https://unpkg.com/blockly/msg/en.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Alata&display=swap" rel="stylesheet">
+
+        <style>
+            body {
+                background: #c5cace;
+                background: -webkit-linear-gradient(to bottom, #eef2f3, #c5cace); 
+                background: linear-gradient(to bottom, #eef2f3, #c5cace); 
+            }
+
+            .blocklyToolboxDiv {
+                background: #50C9C3; 
+                background: -webkit-linear-gradient(to right, #96DEDA, #50C9C3); 
+                background: linear-gradient(to right, #96DEDA, #50C9C3);
+                color: white;
+            }
+
+            .blocklyToolbox {
+                font-family: 'Alata', sans-serif;
+            }
+        </style>
     </head>
     <body>
-        <div class="side-bar">
-                <p style="color: gray; margin-left: 25px; margin-top: 10px;">Events</p>
-                <button class="events-btn" id="ops">&nbsp;On program start&nbsp;</button>
-                <button class="events-btn" id="wkip">&nbsp;When ___ key is pressed&nbsp;</button>
-                <button class="events-btn" style="font-size: 13px;" onclick="prompt('This snippet need to be added to your code:', 'print(x)')">&nbsp;Say ____&nbsp;</button>
-                <button class="events-btn" style="font-size: 13px;" onclick="prompt('This snippet need to be added to your code:', 'input(x)')">&nbsp;Ask ____&nbsp;</button>
-                <p style="color: gray; margin-left: 25px; margin-top: 10px;">Loops</p>
-                <button class="loops-btn" id="rt">&nbsp;Repeat ___ times&nbsp;</button>
-                <button class="loops-btn" id="wi">&nbsp;While _____ is ____&nbsp;</button>
-                <button class="loops-btn" id="il">&nbsp;Infinite loop&nbsp;</button><br>
-                <button class="loops-btn" id="w">&nbsp;Wait ____&nbsp;</button>
-                <button class="loops-btn" id="itd">&nbsp;If _____ then do ____&nbsp;</button>
-                <button class="loops-btn" id="etd">&nbsp;Else _____ then do ____&nbsp;</button>
-                <button class="loops-btn" id="elif">&nbsp;Elif _____ then do ____&nbsp;</button>
-                <p style="color: gray; margin-left: 25px; margin-top: 10px;">Operators</p>
-                <button class="operators-btn" id="plus">&nbsp;_ + _&nbsp;</button>
-                <button class="operators-btn" id="minus">&nbsp;_ - _&nbsp;</button>
-                <button class="operators-btn" id="time">&nbsp;_ * _&nbsp;</button>
-                <button class="operators-btn" id="divide">&nbsp;_ /_&nbsp;</button>
-                <button class="operators-btn" id="bigger">&nbsp;_ > _&nbsp;</button>
-                <button class="operators-btn" id="smaller">&nbsp;_ < _&nbsp;</button>
-                <button class="operators-btn" id="equal">&nbsp;_ = _&nbsp;</button>
-                <button class="operators-btn" id="not">&nbsp;_ != _&nbsp;</button>
-                <button class="operators-btn" id="rand">&nbsp;Pick random from _ to _&nbsp;</button>
-                <p style="color: gray; margin-left: 25px; margin-top: 10px;">Variables</p>
-                <button class="variables-btn" id="st">&nbsp;Set ____ to ____&nbsp;</button>
-                <button class="variables-btn" id="ct" style="margin-bottom: 10px;">&nbsp;Change ____ to ____&nbsp;</button>
-                <p style="color: gray; margin-left: 25px; margin-top: 10px;">Functions</p>
-                <button class="functions-btn" id="d">&nbsp;Do _________&nbsp;</button>
-                <button class="functions-btn" id="r">&nbsp;Return _____&nbsp;</button>
-                <button class="functions-btn" id="us">&nbsp;Use ____ function&nbsp;</button><br><br>
-                
-        </div>
-        <form action="/result" method="POST" id="code">
-            <div class="editor">
-                    <textarea id="editor" name="code">{{ code }}</textarea>
-            </div>
+        <form method="POST" action="/result" id="code">
             <div id="run">
+                <div class="editor">
+                    <textarea id="editor" name="code">{{ code }}</textarea> 
+                </div>
                 <button type="submit" class="run__btn" id="run__btn">Run</button>
                 <input type="text" placeholder="Project Name" id="project_name">
                 <button id="save_btn">Save</button>
+                <p style="color: gray; margin-left: 10px; margin-top: 25px;">Console</p>
                 <div id="console">
-                    <p style="color: gray; margin-left: 10px; margin-top: 25px;">Console</p>
-                    <div style="margin-left: 2%; margin-top: 25px; width: 93%;">
-                        <py-script id="result">{{ code }}</py-script>
+                    <button id="block2code">Convert</button>
+                    <div style="margin-left: 2%; margin-top: 5px; width: 93%;">
+                        <py-script terminal>{{ code }}</py-script>
                     </div>
                     <textarea hidden id="code-editor">{{ code }}</textarea>
                 </div>
             </div>
         </form>
+        <div id="blocklyDiv" style="height: 90%; width: 57%;"></div>
 
         <script type="module">
             import { initializeApp } from "https://www.gstatic.com/firebasejs/10.2.0/firebase-app.js";
@@ -81,7 +77,7 @@
               measurementId: "G-GLFEGW9KN3"
             };
           
-            const app = initializeApp(firebaseConfig);
+            const app = initializeApp(firebaseConfig); 
             const analytics = getAnalytics(app);
             const db = getFirestore();
             
@@ -93,12 +89,119 @@
             });
             editor.setSize("100%","100%")
 
+            Blockly.thing;
+            Blockly.libraryBlocks['block_type'];
+            javascript.javascriptGenerator;
+
+            const toolbox = {
+                kind: 'categoryToolbox',
+                contents: [
+                    {
+                    kind: 'category',
+                    name: 'Logic',
+                    colour: '#5094fc',
+                    contents: [
+                        { kind: 'block', type: 'controls_if' },
+                        { kind: 'block', type: 'logic_compare' },
+                        { kind: 'block', type: 'logic_operation' },
+                        { kind: 'block', type: 'logic_negate' },
+                        { kind: 'block', type: 'logic_boolean' }
+                    ]
+                    },
+                    {
+                    kind: 'category',
+                    name: 'Loops',
+                    colour: '#10bc8c',
+                    contents: [
+                        { kind: 'block', type: 'controls_repeat_ext' },
+                        { kind: 'block', type: 'controls_whileUntil' },
+                        { kind: 'block', type: 'controls_for' },
+                        { kind: 'block', type: 'controls_forEach' }
+                    ]
+                    },
+                    {
+                    kind: 'category',
+                    name: 'Math',
+                    colour: '#60c45c',
+                    contents: [
+                        { kind: 'block', type: 'math_number' },//g
+                        { kind: 'block', type: 'math_arithmetic' },//g
+                        { kind: 'block', type: 'math_single' },//g
+                        { kind: 'block', type: 'math_trig' },//g
+                        { kind: 'block', type: 'math_constant' },//g
+                        { kind: 'block', type: 'math_number_property' },//g
+                        { kind: 'block', type: 'math_round' },//g
+                        { kind: 'block', type: 'math_random_int' },
+                        { kind: 'block', type: 'math_random_float' }
+                    ]
+                    },
+                    {
+                    kind: 'category',
+                    name: 'Text',
+                    colour: '#ffbc04',
+                    contents: [
+                        { kind: 'block', type: 'text' },
+                        { kind: 'block', type: 'text_join' },
+                        { kind: 'block', type: 'text_append' },
+                        { kind: 'block', type: 'text_length' },
+                        { kind: 'block', type: 'text_isEmpty' },
+                        { kind: 'block', type: 'text_indexOf' },
+                        { kind: 'block', type: 'text_charAt' },
+                        { kind: 'block', type: 'text_getSubstring' },
+                        { kind: 'block', type: 'text_changeCase' },
+                        { kind: 'block', type: 'text_trim' },
+                        { kind: 'block', type: 'text_print' },
+                        { kind: 'block', type: 'text_prompt' }
+                    ]
+                    },
+                    {
+                    kind: 'category',
+                    name: 'Lists',
+                    colour: '#9966ff',
+                    contents: [
+                        { kind: 'block', type: 'lists_create_with' },
+                        { kind: 'block', type: 'lists_repeat' },
+                        { kind: 'block', type: 'lists_length' },
+                        { kind: 'block', type: 'lists_isEmpty' },
+                        { kind: 'block', type: 'lists_indexOf' },
+                        { kind: 'block', type: 'lists_getIndex' },
+                        { kind: 'block', type: 'lists_setIndex' },
+                        { kind: 'block', type: 'lists_split' },
+                        { kind: 'block', type: 'lists_sort' },
+                        { kind: 'block', type: 'lists_reverse' }
+                    ]
+                    },
+                    {
+                    kind: 'category',
+                    name: 'Variables',
+                    colour: '#ff8c1a',
+                    custom: 'VARIABLE'
+                    },
+                    {
+                    kind: 'category',
+                    name: 'Functions',
+                    colour: '#ff6680',
+                    custom: 'PROCEDURE'
+                    }
+                ]
+                };
+
+            const workspace = Blockly.inject(
+                document.getElementById('blocklyDiv'), { renderer: 'zelos', toolbox: toolbox, theme: 'zelos', grid: {spacing: 20, length: 3, colour: '#ccc', snap: true}, });
+
+
+                document.getElementById("block2code").addEventListener("click", function(e){e.preventDefault(); editor.setValue(python.pythonGenerator.workspaceToCode(workspace))})
+
             const uid = localStorage.getItem("uid");
 
 
             window.onload=function(){
                 const projects = collection(db, 'Projects');
                 const code = document.getElementById("editor").value;
+                const state = Blockly.serialization.workspaces.save(workspace);
+
+                editor.setValue(localStorage.getItem("code"))
+                Blockly.serialization.workspaces.load(localStorage.getItem("state"), workspace);
 
                 const words = [
                     "aerie", "alliance", "assembly", "bale", "band",
@@ -150,7 +253,8 @@
                     addDoc(projects, {
                         uid: uid,
                         name: name.value,
-                        code: code  
+                        code: code,
+                        state: state  
                     });
 
                     const q = query(collection(db, "Projects"), where("name", "==", name.value));
@@ -165,27 +269,38 @@
 
                                 localStorage.setItem("pid", docname.id);
 
-                                projectsId = docname.id;
+                                //editor.setValue(data.code);
+                                //Blockly.serialization.workspaces.load(data.state, workspace);
 
-                                console.log(document.getElementById("editor").value)
+                                editor.setValue(localStorage.getItem("code"))
+                                Blockly.serialization.workspaces.load(localStorage.getItem("state"), workspace);                                
+
+                                projectsId = docname.id;
 
                                 document.getElementById("save_btn").addEventListener("click", function(e){
                                     e.preventDefault();
+
+                                    localStorage.setItem("code", code)
+                                    localStorage.setItem("state", state)
 
                                     let saved = false;
 
                                     async function update() {
                                         if (saved === false) {
                                             const update = await updateDoc(docRef, {
-                                                code: document.getElementById("code-editor").value,
+                                                code: code,
+                                                state: state,
                                                 name: name.value
                                             });
 
                                             localStorage.setItem("docRef", docRef)
                                             saved = true;
                                         } else {
+                                            //localStorage.setItem("code", code)
+                                            //localStorage.setItem("state", state)
                                             const update = await updateDoc(localStorage.getItem("docRef"), {
-                                                code: document.getElementById("code-editor").value,
+                                                code: code,
+                                                state: state,
                                                 name: name.value
                                             });
 
@@ -234,25 +349,37 @@
 
                         projectsId2 = localStorage.getItem("pid");
 
-                        document.getElementById("editor").value = data.code;
+                        //editor.setValue(data.code)
+                        //Blockly.serialization.workspaces.load(data.state, workspace);
+
+                        editor.setValue(localStorage.getItem("code"))
+                        console.log(localStorage.getItem("state"))
+                        Blockly.serialization.workspaces.load(localStorage.getItem("state"), workspace);
 
                         document.getElementById("save_btn").addEventListener("click", function(e){
                             e.preventDefault();
 
+                            localStorage.setItem("code", code)
+                            localStorage.setItem("state", state)
+
                             let saved = false;
 
                             async function update() {
-                                        if (saved === false) {
-                                    const update = await updateDoc(docRef, {
-                                        code: document.getElementById("code-editor").value,
+                                if (saved === false) {
+                                    await updateDoc(docRef, {
+                                        code: code,
+                                        state: state,
                                         name: name.value
                                     });
 
                                     localStorage.setItem("docRef", docRef)
                                     saved = true;
                                 } else {
+                                    //localStorage.setItem("code", code)
+                                    //localStorage.setItem("state", state)
                                     const update = await updateDoc(localStorage.getItem("docRef"), {
-                                        code: document.getElementById("code-editor").value,
+                                        code: code,
+                                        state: state,
                                         name: name.value
                                     });
 
@@ -288,99 +415,6 @@
                 }
 
             }
-
-
-            document.getElementById("ops").addEventListener("click", function(){
-                prompt("This snippet need to be added to your code:", "if __name__ == '__main__':")
-            });
-
-            document.getElementById("rt").addEventListener("click", function(){
-                prompt("This snippet need to be added to your code:", "for i in range(x):")
-            });
-
-            document.getElementById("wi").addEventListener("click", function(){
-                prompt("This snippet need to be added to your code:", "while x:")
-            });
-
-            document.getElementById("il").addEventListener("click", function(){
-                prompt("This snippet need to be added to your code:", "while True:")
-            });
-
-            document.getElementById("w").addEventListener("click", function(){
-                prompt("This snippet need to be added to your code:", "import time | time.sleep(x)")
-            });
-
-            document.getElementById("itd").addEventListener("click", function(){
-                prompt("This snippet need to be added to your code:", "if x:")
-            });
-
-            document.getElementById("etd").addEventListener("click", function(){
-                prompt("This snippet need to be added to your code:", "else:")
-            });
-
-            document.getElementById("elif").addEventListener("click", function(){
-                prompt("This snippet need to be added to your code:", "elif y:")
-            });
-
-            document.getElementById("plus").addEventListener("click", function(){
-                prompt("This snippet need to be added to your code:", "x + y")
-            });
-
-            document.getElementById("minus").addEventListener("click", function(){
-                prompt("This snippet need to be added to your code:", "x - y")
-            });
-
-            document.getElementById("time").addEventListener("click", function(){
-                prompt("This snippet need to be added to your code:", "x * y")
-            });
-
-            document.getElementById("divide").addEventListener("click", function(){
-                prompt("This snippet need to be added to your code:", "x / y")
-            });
-
-            document.getElementById("bigger").addEventListener("click", function(){
-                prompt("This snippet need to be added to your code:", " x > y")
-            });
-
-            document.getElementById("smaller").addEventListener("click", function(){
-                prompt("This snippet need to be added to your code:", "x < y")
-            });
-
-            document.getElementById("equal").addEventListener("click", function(){
-                prompt("This snippet need to be added to your code:", "x == y")
-            });
-
-            document.getElementById("not").addEventListener("click", function(){
-                prompt("This snippet need to be added to your code:", "x != y")
-            });
-
-            document.getElementById("rand").addEventListener("click", function(){
-                prompt("This snippet need to be added to your code:", "import random | random.randint(x,y)")
-            });
-
-            document.getElementById("wkip").addEventListener("click", function(){
-                prompt('This snippet need to be added to your code:', 'input("Press a key:")')
-            });
-
-            document.getElementById("st").addEventListener("click", function(){
-                prompt('This snippet need to be added to your code:', 'myVar = x')
-            });
-
-            document.getElementById("ct").addEventListener("click", function(){
-                prompt('This snippet need to be added to your code:', 'myVar = y')
-            });
-
-            document.getElementById("d").addEventListener("click", function(){
-                prompt('This snippet need to be added to your code:', 'def x(y):')
-            });
-
-            document.getElementById("r").addEventListener("click", function(){
-                prompt('This snippet need to be added to your code:', 'return x')
-            });
-
-            document.getElementById("us").addEventListener("click", function(){
-                prompt('This snippet need to be added to your code:', 'x(y)')
-            });
         </script>
     </body>
     </html>

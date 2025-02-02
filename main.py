@@ -29,7 +29,7 @@ def result():
 def editor():
     code = str(session.get('input_code'))
 
-    return render_template("editor.html", code=code)
+    return render_template("editor.html", code=str(code))
 
 @app.route('/explore')
 def explore():
